@@ -1,13 +1,17 @@
 import React from "react";
 import { Outlet } from "react-router";
 import joinNow from "../assets/joinNow.png";
+import Navbar from "../components/Navbar";
 
 const AuthLayouts = () => {
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center">
-      <img className="w-80" src={joinNow} alt="join now" />
-      <Outlet />
-    </div>
+    <>
+      <Navbar />
+      <div className="flex items-center justify-center">
+        <Outlet />
+        <img className="w-[500px]" src={joinNow} alt="join now" />
+      </div>
+    </>
   );
 };
 
