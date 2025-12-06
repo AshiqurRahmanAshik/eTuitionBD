@@ -2,8 +2,18 @@ import React from "react";
 import Logo from "./Logo";
 import MyContainer from "./MyContainer";
 import MyLink from "./MyLink";
+import useAuth from "../hooks/useAuth";
+import { Link } from "react-router";
 
 const Navbar = () => {
+  const { user, logOut } = useAuth();
+
+  const handleLogOut = () => {
+    logOut()
+      .then()
+      .catch((error) => [console.log(error)]);
+  };
+
   return (
     <MyContainer className="sticky top-0">
       <div className="navbar bg-base-100 shadow-sm  ">
@@ -78,14 +88,33 @@ const Navbar = () => {
         </div>
 
         {/* Navbar End*/}
-        <div className="navbar-end  gap-3">
-          <button className="btn btn-outline border-primary text-primary">
-            Sign Up
-          </button>
-          <button className="btn btn-outline border-primary text-primary">
-            Sign In{" "}
-          </button>
-        </div>
+        {user ? (
+          // When user is logged in
+          <div className="navbar-end gap-3">
+            <button
+              onClick={handleLogOut}
+              className="btn btn-outline border-primary text-primary"
+            >
+              Sign Out
+            </button>
+          </div>
+        ) : (
+          // When no user logged in
+          <div className="navbar-end gap-3">
+            <Link
+              to="/register"
+              className="btn btn-outline border-primary text-primary"
+            >
+              Register
+            </Link>
+            <Link
+              to="/login"
+              className="btn btn-outline border-primary text-primary"
+            >
+              Sign In
+            </Link>
+          </div>
+        )}
       </div>
     </MyContainer>
   );
