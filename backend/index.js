@@ -14,12 +14,14 @@ app.use(express.json());
 // Import routes
 const authRoutes = require("./routes/auth");
 const tuitionRoutes = require("./routes/tuitions");
-const applicationRoutes = require("./routes/applications"); // ← Add this line
+const applicationRoutes = require("./routes/applications");
+const paymentRoutes = require("./routes/payments"); // ← Add this line
 
 // Use routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tuitions", tuitionRoutes);
-app.use("/api/applications", applicationRoutes); // ← Add this line
+app.use("/api/applications", applicationRoutes);
+app.use("/api/payments", paymentRoutes); // ← Add this line
 
 // Test route
 app.get("/", (req, res) => {
