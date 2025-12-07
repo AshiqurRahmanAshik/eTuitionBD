@@ -6,7 +6,7 @@ import AuthLayouts from "../layouts/AuthLayouts";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
 import PrivateRoutes from "./PrivateRoutes";
-import Teacher from "../Pages/Teacher";
+import TutorReq from "../Pages/TutorReq";
 
 export const router = createBrowserRouter([
   {
@@ -15,10 +15,10 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: Home },
       {
-        path: "teacher",
+        path: "tutor-req",
         element: (
           <PrivateRoutes>
-            <Teacher></Teacher>
+            <TutorReq></TutorReq>
           </PrivateRoutes>
         ),
       },

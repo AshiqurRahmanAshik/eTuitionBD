@@ -45,16 +45,16 @@ const Navbar = () => {
                 <MyLink to="/">Home</MyLink>
               </li>
               <li>
-                <MyLink to="/tuitions">Tuitions</MyLink>
+                <MyLink to="/tuitions">Browse Tuitions</MyLink>
               </li>
               <li>
-                <MyLink to="/tutors">Tutors</MyLink>
-              </li>
-              <li>
-                <MyLink to="/about">About Us</MyLink>
+                <MyLink to="/tutor-req">Request for a Tutor</MyLink>
               </li>
               <li>
                 <MyLink to="/teacher">Be a Teacher</MyLink>
+              </li>
+              <li>
+                <MyLink to="/about">About Us</MyLink>
               </li>
             </ul>
           </div>
@@ -73,16 +73,16 @@ const Navbar = () => {
               <MyLink to="/">Home</MyLink>
             </li>
             <li>
-              <MyLink to="/Tuitions">Tuitions</MyLink>
+              <MyLink to="/Tuitions">Browse Tuitions</MyLink>
             </li>
             <li>
-              <MyLink to="/about">About Us</MyLink>
-            </li>
-            <li>
-              <MyLink to="/tutors">Tutors</MyLink>
+              <MyLink to="/tutor-req">Request for a Tutor</MyLink>
             </li>
             <li>
               <MyLink to="/teacher">Be a Teacher</MyLink>
+            </li>
+            <li>
+              <MyLink to="/about">About Us</MyLink>
             </li>
           </ul>
         </div>
