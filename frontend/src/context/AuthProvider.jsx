@@ -1,65 +1,139 @@
-import React, { useEffect, useState } from "react";
-import { AuthContext } from "./AuthContext";
+import { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
-  signInWithPopup,
   signOut,
+  onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../firebase/firebase.init";
+import { auth } from "../utils/firebase";
+import axios from "axios";
 
-const googleProvider = new GoogleAuthProvider();
+export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
 
-  const registerUser = (email, password) => {
+  // Register new user
+  const createUser = async (email, password, name, role, phone) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
+    try {
+      // Create user in Firebase
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Update profile with name
+      await updateProfile(userCredential.user, { displayName: name });
+
+      // Register user in your backend
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        {
+          name,
+          email,
+          password,
+          role,
+          phone,
+        }
+      );
+
+      // Save token
+      const authToken = response.data.token;
+      setToken(authToken);
+      localStorage.setItem("token", authToken);
+
+      return userCredential;
+    } catch (error) {
+      console.error("Registration error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
-  const signInUser = (email, password) => {
+
+  // Login user
+  const signInUser = async (email, password) => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
+    try {
+      // Sign in with Firebase
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Login to your backend
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          email,
+          password,
+        }
+      );
+
+      // Save token
+      const authToken = response.data.token;
+      setToken(authToken);
+      localStorage.setItem("token", authToken);
+
+      return userCredential;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const signInGoogle = () => {
+  // Logout user
+  const logOut = async () => {
     setLoading(true);
-    return signInWithPopup(auth, googleProvider);
+    try {
+      await signOut(auth);
+      setToken(null);
+      localStorage.removeItem("token");
+    } catch (error) {
+      console.error("Logout error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const logOut = () => {
-    setLoading(true);
-    return signOut(auth);
-  };
-
-  const updateUserProfile = (profile) => {
-    return updateProfile(auth.currentUser, profile);
-  };
-
+  // Monitor auth state
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+
+      // Get token from localStorage if exists
+      const savedToken = localStorage.getItem("token");
+      if (savedToken) {
+        setToken(savedToken);
+      }
+
       setLoading(false);
     });
-    return () => {
-      unSubscribe();
-    };
+
+    return () => unsubscribe();
   }, []);
 
   const authInfo = {
-    registerUser,
-    signInUser,
-    signInGoogle,
     user,
     loading,
+    token,
+    createUser,
+    signInUser,
     logOut,
-    updateUserProfile,
   };
-  return <AuthContext value={authInfo}>{children}</AuthContext>;
+
+  return (
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;
