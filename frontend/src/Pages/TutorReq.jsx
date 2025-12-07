@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const TutorReq = () => {
-    return (
-        <div>
-            teacher
-        </div>
-    );
+  return <div>teacher</div>;
 };
 
 export default TutorReq;
