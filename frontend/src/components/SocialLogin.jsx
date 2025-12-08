@@ -1,57 +1,64 @@
-import React from "react";
-import useAuth from "./../hooks/useAuth";
+import { FaGoogle } from "react-icons/fa";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../utils/firebase";
 import { useLocation, useNavigate } from "react-router";
+import axios from "axios";
 
 const SocialLogin = () => {
-  const { signInGoogle } = useAuth();
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleGoogleSignIn = () => {
-    signInGoogle()
-      .then((result) => {
-        console.log(result.user);
-        navigate(location.state || "/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Try to register user in backend (default role: student)
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/auth/register`,
+          {
+            name: user.displayName,
+            email: user.email,
+            password: user.uid,
+            role: "student",
+            phone: user.phoneNumber || "",
+            photoURL: user.photoURL || "",
+          }
+        );
+
+        localStorage.setItem("token", response.data.token);
+        navigate(location?.state || "/");
+      } catch (error) {
+        // If user exists, try to login
+        if (error.response?.status === 400) {
+          const loginResponse = await axios.post(
+            `${import.meta.env.VITE_API_URL}/api/auth/login`,
+            {
+              email: user.email,
+              password: user.uid,
+            }
+          );
+
+          localStorage.setItem("token", loginResponse.data.token);
+          navigate(location?.state || "/");
+        } else {
+          throw error;
+        }
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+      alert("Google login failed. Please try again.");
+    }
   };
 
   return (
-    <div className="text-center space-y-2">
-      <p className="text-sm">OR</p>
-      <button
-        onClick={handleGoogleSignIn}
-        className="btn bg-white text-primary border-[#e5e5e5]"
-      >
-        <svg
-          aria-label="Google logo"
-          width="16"
-          height="16"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-        >
-          <g>
-            <path d="m0 0H512V512H0" fill="#fff"></path>
-            <path
-              fill="#34a853"
-              d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-            ></path>
-            <path
-              fill="#4285f4"
-              d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-            ></path>
-            <path
-              fill="#fbbc02"
-              d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-            ></path>
-            <path
-              fill="#ea4335"
-              d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-            ></path>
-          </g>
-        </svg>
+    <div className="mt-6">
+      <div className="divider">OR</div>
+      <button onClick={handleGoogleLogin} className="btn btn-outline w-full">
+        <FaGoogle className="mr-2" />
         Continue with Google
       </button>
     </div>

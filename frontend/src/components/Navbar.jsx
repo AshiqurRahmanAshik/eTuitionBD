@@ -1,122 +1,124 @@
-import React from "react";
-import Logo from "./Logo";
-import MyContainer from "./MyContainer";
-import MyLink from "./MyLink";
-import useAuth from "../hooks/useAuth";
-import { Link } from "react-router";
+import { useContext } from "react";
+import { Link, NavLink } from "react-router";
+import { AuthContext } from "../context/AuthProvider";
 
 const Navbar = () => {
-  const { user, logOut } = useAuth();
+  const { user, logOut } = useContext(AuthContext);
 
-  const handleLogOut = () => {
-    logOut()
-      .then()
-      .catch((error) => [console.log(error)]);
+  const handleLogout = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
+  const navLinks = (
+    <>
+      <li>
+        <NavLink to="/">Home</NavLink>
+      </li>
+      <li>
+        <NavLink to="/tuitions">Tuitions</NavLink>
+      </li>
+      <li>
+        <NavLink to="/tutors">Tutors</NavLink>
+      </li>
+      <li>
+        <NavLink to="/about">About</NavLink>
+      </li>
+      <li>
+        <NavLink to="/contact">Contact</NavLink>
+      </li>
+    </>
+  );
+
   return (
-    <MyContainer className="sticky top-0">
-      <div className="navbar bg-base-100 shadow-sm  ">
-        {/* Navbar Start */}
-        <div className="navbar-start">
-          {/* Mobile Dropdown */}
-          <div className="dropdown">
-            <label tabIndex={0} className="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="#7297d6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </label>
-            <ul
-              tabIndex={-1}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow"
+    <div className="navbar bg-base-100 shadow-md sticky top-0 z-50">
+      <div className="navbar-start">
+        {/* Mobile Dropdown */}
+        <div className="dropdown">
+          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <li>
-                <MyLink to="/">Home</MyLink>
-              </li>
-              <li>
-                <MyLink to="/tuitions">Browse Tuitions</MyLink>
-              </li>
-              <li>
-                <MyLink to="/tutor-req">Request for a Tutor</MyLink>
-              </li>
-              <li>
-                <MyLink to="/teacher">Be a Teacher</MyLink>
-              </li>
-              <li>
-                <MyLink to="/about">About Us</MyLink>
-              </li>
-            </ul>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
           </div>
-
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <Logo />
-            <h2 className="font-bold text-xl -ms-1 text-primary">eTuitionBD</h2>
-          </div>
-        </div>
-
-        {/* Navbar Center - Desktop Links */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <MyLink to="/">Home</MyLink>
-            </li>
-            <li>
-              <MyLink to="/Tuitions">Browse Tuitions</MyLink>
-            </li>
-            <li>
-              <MyLink to="/tutor-req">Request for a Tutor</MyLink>
-            </li>
-            <li>
-              <MyLink to="/teacher">Be a Teacher</MyLink>
-            </li>
-            <li>
-              <MyLink to="/about">About Us</MyLink>
-            </li>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+          >
+            {navLinks}
           </ul>
         </div>
 
-        {/* Navbar End*/}
+        {/* Logo */}
+        <Link to="/" className="btn btn-ghost text-xl">
+          <span className="text-primary font-bold">eTuition</span>
+          <span className="text-secondary">BD</span>
+        </Link>
+      </div>
+
+      {/* Desktop Menu */}
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal px-1">{navLinks}</ul>
+      </div>
+
+      <div className="navbar-end">
         {user ? (
-          // When user is logged in
-          <div className="navbar-end gap-3">
-            <button
-              onClick={handleLogOut}
-              className="btn btn-outline border-primary text-primary"
+          <div className="dropdown dropdown-end">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
             >
-              Sign Out
-            </button>
+              <div className="w-10 rounded-full">
+                <img
+                  alt="User avatar"
+                  src={user.photoURL || "https://via.placeholder.com/150"}
+                />
+              </div>
+            </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            >
+              <li className="menu-title">
+                <span>{user.displayName || "User"}</span>
+              </li>
+              <li>
+                <Link to="/dashboard">Dashboard</Link>
+              </li>
+              <li>
+                <Link to="/dashboard/profile">Profile Settings</Link>
+              </li>
+              <li>
+                <button onClick={handleLogout}>Logout</button>
+              </li>
+            </ul>
           </div>
         ) : (
-          // When no user logged in
-          <div className="navbar-end gap-3">
-            <Link
-              to="/register"
-              className="btn btn-outline border-primary text-primary"
-            >
-              Register
+          <div className="flex gap-2">
+            <Link to="/login" className="btn btn-ghost">
+              Login
             </Link>
-            <Link
-              to="/login"
-              className="btn btn-outline border-primary text-primary"
-            >
-              Sign In
+            <Link to="/register" className="btn btn-primary">
+              Register
             </Link>
           </div>
         )}
       </div>
-    </MyContainer>
+    </div>
   );
 };
 

@@ -1,120 +1,91 @@
-import React from "react";
-import MyLink from "./MyLink";
-import MyContainer from "./MyContainer";
-import Logo from "./Logo";
-import { FaFacebook, FaYoutube, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router";
+import { FaFacebook, FaLinkedin, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    <div className="bg-base-200 pt-16 pb-10 mt-20 mx-auto">
-      {/* Subscribe Section */}
-      <MyContainer>
-        <div className="bg-primary text-white p-10  shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
-          <h2 className="text-2xl md:text-3xl font-semibold max-w-lg leading-snug">
-            Subscribe for the latest updates and new features.
-          </h2>
-
-          <div className="join w-full md:w-auto">
-            <input
-              type="email"
-              placeholder="Email"
-              className="input input-bordered join-item w-full md:w-72"
-            />
-            <button className="btn bg-primary text-white join-item px-6">
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </MyContainer>
-
-      {/* Main Footer Section */}
-      <MyContainer>
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 w-11/12 mx-auto justify-items-start">
-          {/* Logo + Description */}
+    <footer className="bg-base-200 text-base-content">
+      <div className="container mx-auto px-4 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* About Section */}
           <div>
-            <div className="flex items-center gap-3">
-              <Logo className="w-12 h-12" />
-              <h2 className="font-bold text-xl text-primary">eTuitionBD</h2>
-            </div>
-            <p className="mt-4 text-gray-600 leading-relaxed">
-              eTuitionBD connects students with qualified tutors across
-              Bangladesh, making quality learning accessible and effortless for
-              everyone.
+            <h3 className="font-bold text-lg mb-4">
+              <span className="text-primary">eTuition</span>
+              <span className="text-secondary">BD</span>
+            </h3>
+            <p className="text-sm">
+              Bangladesh's leading platform connecting students with qualified
+              tutors. Find the perfect tutor for your educational needs.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-3">Quick Links</h3>
-            <ul className="space-y-2 text-gray-600 leading-relaxed">
+            <h3 className="font-bold text-lg mb-4">Quick Links</h3>
+            <ul className="space-y-2">
               <li>
-                <MyLink to="/Tuitions">Find Tutor</MyLink>
+                <Link to="/" className="link link-hover">
+                  Home
+                </Link>
               </li>
               <li>
-                <MyLink to="/request">Request for Tutor</MyLink>
+                <Link to="/tuitions" className="link link-hover">
+                  Find Tuitions
+                </Link>
               </li>
               <li>
-                <MyLink to="/teacher">Become a Tutor</MyLink>
+                <Link to="/tutors" className="link link-hover">
+                  Find Tutors
+                </Link>
               </li>
               <li>
-                <MyLink to="/subscription">Subscription Plan</MyLink>
+                <Link to="/about" className="link link-hover">
+                  About Us
+                </Link>
               </li>
             </ul>
           </div>
 
-          {/* Company */}
+          {/* Contact Information */}
           <div>
-            <h3 className="font-semibold text-lg mb-3">Company</h3>
-            <ul className="space-y-2 text-gray-600 leading-relaxed">
-              <li>
-                <MyLink to="/contact">Contact Us</MyLink>
-              </li>
-              <li>
-                <MyLink to="/privacy">Privacy Policy</MyLink>
-              </li>
+            <h3 className="font-bold text-lg mb-4">Contact Us</h3>
+            <ul className="space-y-2 text-sm">
+              <li>📍 Dhaka, Bangladesh</li>
+              <li>📞 +880 1712-345678</li>
+              <li>✉️ info@etuitionbd.com</li>
+              <li>🕐 Sun - Thu: 9AM - 6PM</li>
             </ul>
           </div>
 
-          {/* Socials */}
+          {/* Social Media */}
           <div>
-            <h3 className="font-semibold text-lg mb-3">Socials</h3>
-            <ul className="space-y-3 text-gray-600 leading-relaxed ">
-              <li className="flex items-center gap-2">
-                <span className="w-5 flex justify-center">
-                  <FaFacebook size={20} color="blue" />
-                </span>
-                <a>Facebook</a>
-              </li>
+            <h3 className="font-bold text-lg mb-4">Follow Us</h3>
+            <p className="text-sm mb-4">
+              Stay connected with us on social media
+            </p>
+            <div className="flex gap-4">
+              <FaFacebook className="text-lg" />
 
-              <li className="flex items-center gap-2">
-                <span className="w-5 flex justify-center">
-                  <FaYoutube size={20} color="red" />
-                </span>
-                <a>YouTube</a>
-              </li>
+              <FaXTwitter className="text-lg" />
 
-              <li className="flex items-center gap-2">
-                <span className="w-5 flex justify-center">
-                  <FaXTwitter size={20} color="black" />
-                </span>
-                <a>Twitter</a>
-              </li>
+              <FaLinkedin className="text-lg" />
 
-              <li className="flex items-center gap-2">
-                <span className="w-5 flex justify-center">
-                  <FaLinkedin size={20} color="blue" />
-                </span>
-                <a>LinkedIn</a>
-              </li>
-            </ul>
+              <FaYoutube className="text-lg" />
+            </div>
           </div>
         </div>
-        <p className="text-center text-gray-500 text-sm mt-5">
-          Copyright © {new Date().getFullYear()} - All Rights Reserved.
-        </p>
-      </MyContainer>
-    </div>
+      </div>
+
+      {/* Copyright Section */}
+      <div className="bg-base-300 py-4">
+        <div className="container mx-auto px-4 text-center text-sm">
+          <p>
+            © {new Date().getFullYear()} eTuitionBD. All rights reserved. |
+            Designed with ❤️ in Bangladesh
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 };
 
