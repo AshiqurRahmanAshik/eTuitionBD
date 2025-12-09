@@ -16,14 +16,16 @@ const authRoutes = require("./routes/auth");
 const tuitionRoutes = require("./routes/tuitions");
 const applicationRoutes = require("./routes/applications");
 const paymentRoutes = require("./routes/payments");
-const adminRoutes = require("./routes/admin"); // ← Add this line
+const adminRoutes = require("./routes/admin");
+const userRoutes = require("./routes/users");
 
 // Use routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tuitions", tuitionRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/payments", paymentRoutes);
-app.use("/api/admin", adminRoutes); // ← Add this line
+app.use("/api/admin", adminRoutes);
+app.use("/api/users", userRoutes);
 
 // Test route
 app.get("/", (req, res) => {
